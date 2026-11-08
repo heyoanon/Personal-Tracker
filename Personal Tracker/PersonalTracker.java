@@ -56,9 +56,9 @@ class User {
 
         return String.format(
             "=== Financial Summary for %s ===\n" +
-            "Total Income: $%.2f\n" +
-            "Total Expenses: $%.2f\n" +
-            "Net Balance: $%.2f\n",
+            "Total Income: %.2f\n" +
+            "Total Expenses: %.2f\n" +
+            "Net Balance: %.2f\n",
             this.name,
             totalIncome,
             totalExpenses,
@@ -123,19 +123,31 @@ class ExpenseTransaction extends Transaction {
 
 class Category {
     private String categoryName;
+    private String description;
     private double monthlyBudgetLimit;
+    private double monthlyExpenses;
 
-    public Category(String categoryName, double monthlyBudgetLimit) {
+    public Category(String categoryName, String description, double monthlyBudgetLimit, double monthlyExpenses) {
         this.categoryName = categoryName;
+        this.description = description;
         this.monthlyBudgetLimit = monthlyBudgetLimit;
+        this.monthlyExpenses = monthlyExpenses;
     }
 
     public String getCategoryName() {
         return categoryName;
     }
 
+    public String getDescription() {
+        return description;
+    }
+
     public double getMonthlyBudgetLimit() {
         return monthlyBudgetLimit;
+    }
+
+    public double getMonthlyExpenses() {
+        return monthlyExpenses;
     }
 
     public void setCategoryName(String categoryName) {
@@ -151,8 +163,15 @@ public class PersonalTracker {
     public static void main(String[] args) {
         Scanner sc = new Scanner(System.in);
         System.out.println("Welcome to Personal Tracker!");
+        System.out.println("Please enter your details to get started.");
+        System.out.print("Enter your User ID: ");
+        String userId = sc.nextLine();
         System.out.print("Enter your Name: ");
         String name = sc.nextLine();
+        System.out.print("Enter your Email: ");
+        String email = sc.nextLine();
+        System.out.print("Enter the Month and Year: ");
+        String date = sc.nextLine();
         System.out.print("Enter your Monthly Income:  ");
         double monthlyIncome = sc.nextDouble();
         sc.nextLine();
@@ -162,11 +181,13 @@ public class PersonalTracker {
         do {
             System.out.print("Enter a category: ");
             String categoryName = sc.nextLine();
+            System.out.print("Enter any additional description: ");
+            String description = sc.nextLine();
             System.out.print("Enter a monthly budget limit for this category: ");
             double budgetLimit = sc.nextDouble();
             sc.nextLine();
 
-            categories.add(new Category(categoryName, budgetLimit));
+            categories.add(new Category(categoryName, description, budgetLimit, 0));
 
             System.out.print("Add another category? (y/n): ");
             addAnotherCategory = sc.nextLine();
@@ -175,12 +196,18 @@ public class PersonalTracker {
         System.out.println("-----Overall Summary Report-----");
         System.out.println("Name: " + name);
         System.out.println("Monthly Income: " + monthlyIncome);
+        System.out.println("Date: " + date);
         System.out.println("Categories and Budget Limits:");
+        double overallExpenses = 0;
         for (Category category : categories) {
             System.out.println("Category: " + category.getCategoryName());
+            System.out.println("Description: " + category.getDescription());
             System.out.println("Budget Limit: " + category.getMonthlyBudgetLimit());
+            overallExpenses += category.getMonthlyBudgetLimit();
         }
-    
+        
+        System.out.printf("Overall Expenses: %.2f%n", overallExpenses);
+        System.out.printf("Remaining Budget: %.2f%n", monthlyIncome - overallExpenses);
         sc.close();
     }
 }
