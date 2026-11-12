@@ -67,13 +67,19 @@ class User {
     }
 }
 
+class InvalidAmountException extends Exception {
+    public InvalidAmountException(String message) {
+        super(message);
+    }
+} 
+
 abstract class Transaction {
     double amount;
     private String date;
     private String description;
     private Category category;
 
-    public Transaction(double amount, String date, String description, Category category) {
+    public Transaction(double amount, String date, String description, Category category) throws InvalidAmountException {
         this.amount = amount;
         this.date = date;
         this.description = description;
@@ -100,7 +106,7 @@ abstract class Transaction {
 }
 
 class IncomeTransaction extends Transaction {
-    public IncomeTransaction(double amount, String date, String description, Category category) {
+    public IncomeTransaction(double amount, String date, String description, Category category) throws InvalidAmountException {
         super(amount, date, description, category);
     }
 
@@ -111,7 +117,7 @@ class IncomeTransaction extends Transaction {
 }
 
 class ExpenseTransaction extends Transaction {
-    public ExpenseTransaction(double amount, String date, String description, Category category) {
+    public ExpenseTransaction(double amount, String date, String description, Category category) throws InvalidAmountException {
         super(amount, date, description, category);
     }
 
@@ -189,8 +195,15 @@ public class PersonalTracker {
 
             categories.add(new Category(categoryName, description, budgetLimit, 0));
 
-            System.out.print("Add another category? (y/n): ");
-            addAnotherCategory = sc.nextLine();
+            do {
+                System.out.print("Add another category? (y/n): ");
+                addAnotherCategory = sc.nextLine().trim();
+                if (!addAnotherCategory.equalsIgnoreCase("y")
+                        && !addAnotherCategory.equalsIgnoreCase("n")) {
+                    System.out.println("Invalid input. Please enter y for yes, or n for no.");
+                }
+            } while (!addAnotherCategory.equalsIgnoreCase("y")
+                    && !addAnotherCategory.equalsIgnoreCase("n"));
         } while (addAnotherCategory.equalsIgnoreCase("y"));
         
         System.out.println("-----Overall Summary Report-----");
