@@ -195,8 +195,15 @@ public class PersonalTracker {
 
             categories.add(new Category(categoryName, description, budgetLimit, 0));
 
-            System.out.print("Add another category? (y/n): ");
-            addAnotherCategory = sc.nextLine();
+            do {
+                System.out.print("Add another category? (y/n): ");
+                addAnotherCategory = sc.nextLine().trim();
+                if (!addAnotherCategory.equalsIgnoreCase("y")
+                        && !addAnotherCategory.equalsIgnoreCase("n")) {
+                    System.out.println("Invalid input. Please enter y for yes, or n for no.");
+                }
+            } while (!addAnotherCategory.equalsIgnoreCase("y")
+                    && !addAnotherCategory.equalsIgnoreCase("n"));
         } while (addAnotherCategory.equalsIgnoreCase("y"));
         
         System.out.println("-----Overall Summary Report-----");
